@@ -1,0 +1,371 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>黃金渾儀 · 著色器展廳</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,400;1,6..96,500&family=Noto+Serif+TC:wght@300;500&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+/* Layout: fixed full-bleed WebGL painting; chapter text scrolls over it like gallery wall placards. Single dark look by choice. */
+:root{
+  --ink:#0d0b14;
+  --cream:#f4ecdc;
+  --cream-dim:rgba(244,236,220,.72);
+  --brass:#c9a35a;
+  --cyan:#6fe6f0;
+  --magenta:#f06fc8;
+  --veil:rgba(13,11,20,.42);
+  --display:"Bodoni Moda","Didot","Times New Roman",serif;
+  --body:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:dark;
+}
+html,body{background:var(--ink);color:var(--cream)}
+body{font-family:var(--body);font-weight:300;font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--ink)}
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;
+  background:linear-gradient(180deg,#1d3f78 0%,#9fbad6 52%,#21466c 53%,#0d0b14 100%)}
+.top{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding-block:14px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;pointer-events:none}
+.top b{font-family:var(--body);font-weight:500;letter-spacing:.3em;font-size:13px;text-transform:none}
+.top span{color:var(--cream-dim)}
+main{position:relative;z-index:2;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+section{min-height:118vh;display:flex;align-items:center;max-width:1240px;margin:0 auto}
+section.hero{min-height:100vh}
+.card{max-width:27rem;padding:28px 28px 26px;background:var(--veil);
+  -webkit-backdrop-filter:blur(7px) saturate(1.1);backdrop-filter:blur(7px) saturate(1.1);
+  border-top:1px solid var(--brass);text-shadow:0 1px 18px rgba(0,0,0,.35)}
+.hero .card{background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border:0;padding-left:0}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:flex;gap:12px;align-items:baseline}
+.eyebrow i{font-family:var(--display);font-style:italic;font-size:22px;letter-spacing:0;text-transform:none;color:var(--cream)}
+h1,h2{font-weight:300;margin:.35em 0 .45em;text-wrap:balance;line-height:1.25}
+h1{font-size:clamp(34px,5.2vw,62px);letter-spacing:.04em}
+h2{font-size:clamp(26px,3.2vw,38px);letter-spacing:.06em}
+h1 em,h2 em{font-style:normal;font-weight:500;background:linear-gradient(90deg,var(--cream),var(--brass));-webkit-background-clip:text;background-clip:text;color:transparent}
+p{margin:0 0 1em;color:var(--cream-dim);max-width:34em}
+.cta{display:inline-flex;gap:10px;align-items:center;margin-top:10px;padding:10px 16px;border:1px solid var(--brass);color:var(--cream);
+  text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:.14em;transition:background .25s,color .25s}
+.cta:hover{background:var(--brass);color:var(--ink)}
+.cta:focus-visible,.rail a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.specs{list-style:none;padding:0;margin:14px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-family:var(--mono);font-size:12px}
+.specs dt{color:var(--brass)}
+.specs dd{margin:0;color:var(--cream)}
+.try{font-family:var(--mono);font-size:12px;color:var(--cyan);letter-spacing:.06em}
+.rail{position:fixed;right:max(18px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);z-index:5;display:flex;flex-direction:column;gap:14px}
+.rail a{font-family:var(--display);font-style:italic;font-size:15px;color:var(--cream-dim);text-decoration:none;display:flex;align-items:center;gap:10px;justify-content:flex-end;transition:color .3s}
+.rail a::after{content:"";width:18px;height:1px;background:currentColor;transition:width .3s}
+.rail a.on{color:var(--cream)}
+.rail a.on::after{width:38px;background:var(--brass)}
+.hud{position:fixed;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:5;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--cream-dim);font-variant-numeric:tabular-nums;pointer-events:none;
+  display:flex;flex-wrap:wrap;gap:4px 14px;max-width:calc(100% - 32px)}
+.hud b{color:var(--cream);font-weight:400}
+@media (max-width:760px){
+  .rail{display:none}
+  section{align-items:flex-end;padding-block:0 18vh}
+  section.hero{align-items:flex-end;padding-bottom:12vh}
+  .hero .card{background:var(--veil);padding-left:20px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .card{padding:22px 20px}
+}
+@media (prefers-reduced-motion:reduce){.cta,.rail a,.rail a::after{transition:none}}
+</style>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+
+<header class="top">
+  <b>輕賽博美術展廳</b>
+  <span>著色器習作 №1</span>
+</header>
+
+<nav class="rail" aria-label="章節">
+  <a href="#ch1" data-i="1">I</a>
+  <a href="#ch2" data-i="2">II</a>
+  <a href="#ch3" data-i="3">III</a>
+  <a href="#ch4" data-i="4">IV</a>
+</nav>
+
+<main>
+  <section class="hero" id="top">
+    <div class="card">
+      <div class="eyebrow"><i>Prologue</i>序 · 美術 × AI</div>
+      <h1>重構經典，<em>復活敘事</em></h1>
+      <p>這是一幅沒有任何圖片檔的油畫。天空、雲層、大理石台階與黃金渾儀，全部由一段著色器在你的顯示卡上即時畫出。往下捲動，光線、時間和媒材都會跟著改變。</p>
+      <a class="cta" href="#ch1">開始導覽 ↓</a>
+    </div>
+  </section>
+
+  <section id="ch1">
+    <div class="card">
+      <div class="eyebrow"><i>I.</i>光的研究</div>
+      <h2>捲動就是<em>時間</em></h2>
+      <p>晨間的鈷藍天空從上方開始燒穿，露出底下黃昏的玫瑰色。燃燒的前緣會發光，像紙張被點燃。</p>
+      <p>這不是影片。它是一張噪聲門檻遮罩：同一個畫面算兩次，再依捲動進度決定哪一塊已經燒掉。</p>
+    </div>
+  </section>
+
+  <section id="ch2">
+    <div class="card">
+      <div class="eyebrow"><i>II.</i>潛在空間</div>
+      <h2>透鏡底下是<em>像素</em></h2>
+      <p>把滑鼠移到畫上，手機則用手指拖曳。透鏡範圍內，油畫退回它被計算出來之前的樣子：一格一格的 4×4 Bayer 抖動，只剩青與洋紅兩色。</p>
+      <p class="try">→ 試著把透鏡移到黃銅環上</p>
+    </div>
+  </section>
+
+  <section id="ch3">
+    <div class="card">
+      <div class="eyebrow"><i>III.</i>夜間展廳</div>
+      <h2>同一個構圖，<em>換了光源</em></h2>
+      <p>入夜後，大理石台階的邊緣和渾儀的球面亮起霓虹，海面變成往地平線流動的網格。鏡頭同時慢慢推近球體。</p>
+    </div>
+  </section>
+
+  <section id="ch4">
+    <div class="card">
+      <div class="eyebrow"><i>IV.</i>溶解</div>
+      <h2>回到<em>潛在空間</em></h2>
+      <p>最後整幅畫溶回像素。下一步，可以把你的真實畫作當成貼圖放進同一套轉場，一張一張燒開、翻頁。</p>
+      <dl class="specs">
+        <dt>著色器</dt><dd>1 段 WebGL 片段著色器</dd>
+        <dt>圖片</dt><dd>0 張</dd>
+        <dt>影片</dt><dd>0 支</dd>
+        <dt>函式庫</dt><dd>0 個</dd>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<div class="hud" aria-hidden="true">
+  <span>P <b id="hP">0.000</b></span>
+  <span>光 <b id="hT">晨</b></span>
+  <span>ZOOM <b id="hZ">1.00</b></span>
+  <span>DISSOLVE <b id="hD">0.00</b></span>
+</div>
+
+<script>
+(function(){
+const cv=document.getElementById('gl');
+const gl=cv.getContext('webgl',{antialias:false,alpha:false,preserveDrawingBuffer:false});
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const hP=document.getElementById('hP'),hT=document.getElementById('hT'),hZ=document.getElementById('hZ'),hD=document.getElementById('hD');
+const rail=[...document.querySelectorAll('.rail a')];
+
+const VS=`attribute vec2 a;varying vec2 vUv;void main(){vUv=a*.5+.5;gl_Position=vec4(a,0.,1.);}`;
+const FS=`precision highp float;
+varying vec2 vUv;
+uniform vec2 uRes;uniform float uTime;uniform vec2 uM;uniform float uLens;
+uniform vec2 uPar;uniform float uTodA,uTodB,uBurn,uZoom,uDis,uScroll;
+const vec3 CY=vec3(.43,.90,.94);const vec3 MG=vec3(.94,.43,.78);
+float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<5;i++){s+=a*noise(p);p=mat2(1.6,1.2,-1.2,1.6)*p+vec2(3.1,1.7);a*=.5;}return s;}
+vec3 pal(float t,vec3 a,vec3 b,vec3 c){return mix(mix(a,b,clamp(t,0.,1.)),c,clamp(t-1.,0.,1.));}
+float b2(vec2 a){a=floor(a);return fract(a.x/2.+a.y*a.y*.75);}
+float bayer4(vec2 a){return b2(.5*a)*.25+b2(a);}
+mat2 rot(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+
+float ASP,R,TOP,HY;vec2 C;
+void setup(){ASP=uRes.x/uRes.y;
+ if(ASP>1.05){R=.27;C.x=.25*ASP;TOP=-.22;HY=-.06;}
+ else{R=.2;C.x=0.;TOP=.04;HY=.0;}
+ C.y=TOP+R;}
+
+vec3 marble(vec2 p,float tod){
+ vec3 base=pal(tod,vec3(.92,.90,.86),vec3(.96,.80,.68),vec3(.20,.20,.30));
+ float v=abs(sin((p.x*1.3+p.y*.6+fbm(p*3.5)*1.6)*9.));
+ float vein=smoothstep(.12,0.,v)*.32+smoothstep(.035,0.,v)*.2;
+ return base*(1.-vein)*(.93+.07*noise(p*40.));}
+
+void block(inout vec3 col,vec2 p,float hw,float y0,float y1,float tod,float d2){
+ float x=p.x-C.x;
+ if(abs(x)<hw&&p.y>y0&&p.y<y1){
+  vec3 m=marble(p,tod);
+  m*=1.-.24*smoothstep(-hw,hw,x);
+  float lip=smoothstep(y1-.018,y1-.008,p.y);
+  m=mix(m,m*1.1+.035,lip);
+  m*=.72+.28*smoothstep(y0,y0+.035,p.y);
+  m*=.82+.18*smoothstep(0.,.025,hw-abs(x));
+  col=m;
+  col+=d2*smoothstep(.005,0.,abs(p.y-(y1-.008)))*mix(CY,MG,.5+.5*x/hw)*1.3;
+ }}
+
+float ring(vec2 p,float ang,float a,float b,out float front){
+ vec2 pr=rot(ang)*p;float e=length(pr/vec2(a,b));
+ float d=abs(e-1.)*length(pr)/max(e,.001);
+ front=step(pr.y,0.);
+ return smoothstep(.04,.018,d);}
+
+vec3 scene(vec2 q,float tod){
+ float d1=clamp(tod,0.,1.),d2=clamp(tod-1.,0.,1.);
+ vec2 bq=q+.01*(vec2(noise(q*vec2(12.,70.)),noise(q*vec2(70.,12.)+5.))-.5);
+ vec2 sb=bq+vec2(uPar.x*.03,uPar.y*.02+uScroll*.1);
+ vec2 ob=bq-uPar*.012;
+ vec3 top=pal(tod,vec3(.09,.25,.62),vec3(.26,.18,.42),vec3(.015,.02,.07));
+ vec3 hor=pal(tod,vec3(.72,.84,.94),vec3(.99,.63,.42),vec3(.10,.07,.20));
+ float t=clamp((sb.y-HY)/.85,0.,1.);
+ vec3 col=mix(hor,top,pow(t,.65));
+ vec2 SP=vec2(-.22*ASP,mix(.3,HY+.05,d1));
+ vec3 sunC=pal(tod,vec3(1.,.95,.82),vec3(1.,.6,.32),vec3(0.));
+ float sl=length(sb-SP);
+ col+=sunC*(exp(-sl*6.)*.45+smoothstep(.055,.048,sl)*.9)*(1.-d2);
+ col+=d2*step(.9965,hash(floor(sb*260.)))*t*(.5+.5*sin(uTime*3.+hash(floor(sb*260.))*40.));
+ float ml=length(sb-vec2(-.28*ASP,.3));
+ col+=d2*(smoothstep(.045,.04,ml)*vec3(.85,.95,1.)+exp(-ml*9.)*.18*CY);
+ vec2 cp=sb*vec2(1.3,3.)+vec2(uTime*.012,0.);
+ float c=fbm(cp),c2=fbm(cp*2.+4.);
+ float cm=smoothstep(.52,.72,c)*smoothstep(HY+.02,HY+.3,sb.y);
+ vec3 lit=pal(tod,vec3(1.,.98,.94),vec3(1.,.78,.62),vec3(.22,.2,.36));
+ vec3 shd=pal(tod,vec3(.60,.69,.86),vec3(.55,.36,.50),vec3(.07,.07,.15));
+ col=mix(col,mix(shd,lit,smoothstep(.3,.75,c2+(sb.y-HY)*.3)),cm*.92);
+ if(sb.y<HY){
+  float dy=HY-sb.y;
+  vec3 sea=pal(tod,vec3(.15,.35,.57),vec3(.42,.28,.38),vec3(.015,.015,.04));
+  float w=noise(vec2(sb.x*6.,dy*90.-uTime*.4));
+  sea*=.85+.3*w*smoothstep(0.,.08,dy);
+  sea+=sunC*exp(-abs(sb.x-SP.x)*7.)*smoothstep(.55,1.,w)*(1.-d2)*.7;
+  float z=.06/(dy+.004);
+  float fx=abs(fract(sb.x*z*1.2)-.5),fz=abs(fract(z*.9-uTime*.35)-.5);
+  float g=max(smoothstep(.44,.5,fx),smoothstep(.40,.5,fz))*smoothstep(.004,.06,dy);
+  sea+=d2*g*mix(CY,MG,smoothstep(-.6,.6,sb.x))*.9;
+  col=sea;}
+ block(col,ob,R*2.7,-3.,TOP-.34,tod,d2);
+ block(col,ob,R*2.1,TOP-.34,TOP-.2,tod,d2);
+ block(col,ob,R*1.65,TOP-.2,TOP-.09,tod,d2);
+ block(col,ob,R*1.25,TOP-.09,TOP,tod,d2);
+ float x=ob.x-C.x;
+ if(ob.y<TOP&&abs(x)<R*1.25) col*=1.-.55*exp(-(x*x)/(R*R*.64))*smoothstep(.04,0.,TOP-ob.y);
+ vec2 lp=(ob-C)/R;
+ float f1,f2;
+ float r1=ring(lp,.38,1.38,.3,f1);
+ float r2=ring(lp,-.55+.15*sin(uTime*.2),1.22,.12+.22*abs(sin(uTime*.25)),f2);
+ vec3 brass=pal(tod,vec3(.80,.62,.30),vec3(.92,.55,.28),vec3(.25,.2,.25));
+ vec3 rc1=brass*(.75+.5*noise(lp*vec2(30.,4.)))+d2*CY*.9;
+ vec3 rc2=brass*(.7+.5*noise(lp*vec2(4.,30.)))+d2*MG*.9;
+ col=mix(col,rc1,r1*(1.-f1));col=mix(col,rc2,r2*(1.-f2));
+ float ds=dot(lp,lp);
+ if(ds<1.){
+  vec3 n=vec3(lp,sqrt(1.-ds));
+  vec3 L=normalize(vec3(-.7,mix(.6,.12,d1),.7));
+  float df=max(dot(n,L),0.);
+  vec3 rv=reflect(vec3(0,0,-1),n);
+  vec3 env=mix(hor,top,clamp(rv.y*.5+.5,0.,1.));
+  env=mix(marble(ob,tod)*.8,env,smoothstep(-.25,.1,rv.y));
+  float sp=pow(max(dot(reflect(-L,n),vec3(0,0,1)),0.),28.);
+  vec3 gold=pal(tod,vec3(.86,.62,.22),vec3(.93,.50,.20),vec3(.30,.22,.16));
+  vec3 g=gold*(.16+.85*df)+env*gold*.6+sp*pal(tod,vec3(1.,.96,.84),vec3(1.,.75,.5),vec3(.6,.9,1.))*1.1;
+  g*=.9+.2*noise(ob*vec2(70.,12.));
+  float lon=atan(n.x,n.z)+uTime*.12;
+  g*=1.-.18*smoothstep(.03,0.,abs(fract(lon/.5236)-.5)-.47)*n.z;
+  g+=d2*pow(1.-n.z,2.4)*mix(CY,MG,.5+.5*n.y)*1.5;
+  col=mix(col,g,smoothstep(1.,.965,ds));}
+ col=mix(col,rc1,r1*f1);col=mix(col,rc2,r2*f2);
+ col*=.96+.06*noise(q*vec2(220.,180.));
+ return col;}
+
+vec3 render(vec2 q){
+ if(uBurn<.001)return scene(q,uTodA);
+ if(uBurn>.999)return scene(q,uTodB);
+ vec3 a=scene(q,uTodA),b=scene(q,uTodB);
+ float e=fbm(q*2.4+vec2(5.,2.))*.75+.35*(.5-q.y)+.1*q.x;
+ float ed=uBurn*1.35-.1-e;
+ vec3 ch=a*(1.-.65*exp(-max(-ed,0.)*22.));
+ vec3 c=mix(ch,b,smoothstep(-.002,.002,ed));
+ c+=exp(-abs(ed)*70.)*vec3(1.,.6,.25)*1.3+exp(-abs(ed)*18.)*vec3(.9,.3,.1)*.25;
+ return c;}
+
+void main(){
+ setup();
+ vec2 q=(vUv-.5)*vec2(ASP,1.);
+ vec3 col=render(C+(q-C)/uZoom);
+ float cell=floor(max(5.,uRes.y/170.));
+ vec2 px=vUv*uRes;vec2 ci=floor(px/cell);
+ vec2 cq=((ci+.5)*cell/uRes-.5)*vec2(ASP,1.);
+ float ld=length(q-uM);float lr=.17+.012*sin(uTime*1.3);
+ float lm=smoothstep(lr,lr-.006,ld)*uLens;
+ float dm=step(hash(ci*.137+3.),uDis);
+ float m=max(lm,dm);
+ if(m>0.){
+  vec3 c2=render(C+(cq-C)/uZoom);
+  float lum=dot(c2,vec3(.3,.59,.11));
+  float bit=step(bayer4(ci),lum*1.15-.04);
+  vec3 neon=mix(CY,MG,smoothstep(-.5,.5,cq.x-C.x+.25*sin(uTime*.5+cq.y*3.)));
+  col=mix(col,mix(vec3(.04,.03,.09),neon,bit),m);}
+ col+=uLens*smoothstep(.006,0.,abs(ld-lr))*vec3(1.,.82,.5)*.9;
+ col*=.82+.18*smoothstep(1.25,.35,length((vUv-.5)*vec2(1.,1.15))*1.5);
+ col+=(hash(px+fract(uTime*.37))-.5)*.035;
+ gl_FragColor=vec4(col,1.);}`;
+
+if(!gl){return;}
+function sh(t,s){const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)){console.error(gl.getShaderInfoLog(o));return null}return o}
+const vs=sh(gl.VERTEX_SHADER,VS),fs=sh(gl.FRAGMENT_SHADER,FS);
+if(!vs||!fs)return;
+const pr=gl.createProgram();gl.attachShader(pr,vs);gl.attachShader(pr,fs);gl.linkProgram(pr);
+if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){console.error(gl.getProgramInfoLog(pr));return}
+gl.useProgram(pr);
+const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+const al=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(al);gl.vertexAttribPointer(al,2,gl.FLOAT,false,0,0);
+const U={};['uRes','uTime','uM','uLens','uPar','uTodA','uTodB','uBurn','uZoom','uDis','uScroll'].forEach(k=>U[k]=gl.getUniformLocation(pr,k));
+
+let W=0,H=0;
+function resize(){
+  const dpr=Math.min(window.devicePixelRatio||1,1.5);
+  const s=Math.min(1,1700/(innerWidth*dpr));
+  W=Math.round(innerWidth*dpr*s);H=Math.round(innerHeight*dpr*s);
+  cv.width=W;cv.height=H;gl.viewport(0,0,W,H);
+}
+addEventListener('resize',resize);resize();
+
+const ptr={x:0,y:0,sx:0,sy:0,last:-1e9,active:false};
+function setPtr(cx,cy){const asp=innerWidth/innerHeight;ptr.x=(cx/innerWidth-.5)*asp;ptr.y=.5-cy/innerHeight;ptr.last=performance.now();ptr.active=true}
+addEventListener('pointermove',e=>setPtr(e.clientX,e.clientY),{passive:true});
+addEventListener('pointerdown',e=>setPtr(e.clientX,e.clientY),{passive:true});
+addEventListener('touchmove',e=>{const t=e.touches[0];if(t)setPtr(t.clientX,t.clientY)},{passive:true});
+
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const seg=(p,a,b)=>clamp((p-a)/(b-a),0,1);
+let P=0,lens=0,lx=0,ly=0;
+const names=['晨','黃昏','夜'];
+const t0=performance.now();
+
+function frame(now){
+  const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
+  const target=clamp(scrollY/max,0,1);
+  P+=(target-P)*(reduce?1:.085);
+  const time=reduce?12:(now-t0)/1000;
+  const b1=ease(seg(P,.16,.32)),b2=ease(seg(P,.5,.64));
+  let A=0,B=1,burn=b1;if(b1>=1){A=1;B=2;burn=b2}
+  const zoom=1+1.15*ease(seg(P,.62,.88));
+  const dis=ease(seg(P,.86,.995));
+  const asp=W/H;
+  const auto=Math.exp(-Math.pow((P-.45)/.08,2));
+  const recent=ptr.active&&(now-ptr.last<2600);
+  let tx,ty;
+  if(recent){tx=ptr.x;ty=ptr.y}
+  else{const cx=asp>1.05?.25*asp:0, cy=asp>1.05?.05:.24;tx=cx+Math.cos(time*.45)*.28;ty=cy+Math.sin(time*.6)*.16}
+  lx+=(tx-lx)*.16;ly+=(ty-ly)*.16;
+  const want=Math.max(recent?1:0,auto)*(1-dis);
+  lens+=(want-lens)*.1;
+  ptr.sx+=((recent?ptr.x:0)-ptr.sx)*.05;ptr.sy+=((recent?ptr.y:0)-ptr.sy)*.05;
+
+  gl.uniform2f(U.uRes,W,H);gl.uniform1f(U.uTime,time);
+  gl.uniform2f(U.uM,lx,ly);gl.uniform1f(U.uLens,lens);
+  gl.uniform2f(U.uPar,ptr.sx,ptr.sy);
+  gl.uniform1f(U.uTodA,A);gl.uniform1f(U.uTodB,B);gl.uniform1f(U.uBurn,burn);
+  gl.uniform1f(U.uZoom,zoom);gl.uniform1f(U.uDis,dis);gl.uniform1f(U.uScroll,P);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+
+  hP.textContent=P.toFixed(3);
+  hT.textContent=burn>.001&&burn<.999?names[A]+' → '+names[B]:names[burn>=.999?B:A];
+  hZ.textContent=zoom.toFixed(2);hD.textContent=dis.toFixed(2);
+  const sec=P<.13?0:P<.38?1:P<.58?2:P<.82?3:4;
+  rail.forEach(a=>a.classList.toggle('on',+a.dataset.i===sec));
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+
+</body></html>
